@@ -1,0 +1,4 @@
+- name: Install nginx on Debian systems
+  when: ansible_os_family == "Debian"
+  ansible.builtin.apt:
+    name: nginx

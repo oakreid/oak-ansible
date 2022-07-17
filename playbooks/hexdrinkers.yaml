@@ -1,0 +1,5 @@
+---
+- name: Provision hexdrinkers status server
+  hosts: hexdrinkers_status
+  roles:
+    - role: reverse_proxy
