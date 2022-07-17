@@ -1,4 +1,4 @@
 ## Installation
 
 1. `poetry install`
-2. `make collections`
+2. `make galaxy`

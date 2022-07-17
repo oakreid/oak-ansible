@@ -1,4 +1,51 @@
 - name: Install nginx on Debian systems
   when: ansible_os_family == "Debian"
+  become: yes
   ansible.builtin.apt:
     name: nginx
+
+- name: Enable nginx service
+  become: yes
+  ansible.builtin.systemd:
+    name: nginx
+    enabled: yes
+
+- name: Install certbot nginx plugin on Debian systems
+  when: ansible_os_family == "Debian"
+  become: yes
+  ansible.builtin.apt:
+    name: python3-certbot-nginx
+
+- name: Obtain certifications for all sites
+  become: yes
+  ansible.builtin.command:
+    cmd: "certbot --nginx certonly -n --domain {{ item }} --agree-tos --email oakreid@gmail.com --config-dir /etc/letsencrypt"
+  loop: "{{ sites }}"
+
+- name: Upload nginx config for sites
+  become: yes
+  ansible.builtin.copy:
+    src: files/{{ item }}
+    dest: /etc/nginx/sites-available/{{ item }}
+    owner: root
+    group: root
+    mode: 0644
+  loop: "{{ sites }}"
+
+- name: Enable sites
+  become: yes
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/{{ item }}
+    dest: /etc/nginx/sites-enabled/{{ item }}
+    owner: root
+    group: root
+    state: link
+  loop: "{{ sites }}"
+  register: enabled_sites
+
+- name: Restart nginx
+  when: enabled_sites.changed
+  become: yes
+  ansible.builtin.systemd:
+    name: nginx
+    state: restarted

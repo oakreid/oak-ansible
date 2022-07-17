@@ -1,5 +1,7 @@
 ---
-- name: Provision hexdrinkers status server
-  hosts: hexdrinkers_status
+- name: Provision hexdrinkers twitch status server
+  hosts: hexdrinkers_twitch
   roles:
     - role: reverse_proxy
+      sites:
+        - twitch.hexdrinkers.com

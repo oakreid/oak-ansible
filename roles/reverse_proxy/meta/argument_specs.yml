@@ -1,0 +1,12 @@
+---
+argument_specs:
+  main:
+    short_description: Main entrypoint for reverse_proxy role
+    options:
+      sites:
+        description: Sites to configure a reverse proxy for
+        type: list
+        elements: str
+        required: true
+        choices:
+          - twitch.hexdrinkers.com
